@@ -6,4 +6,6 @@ RUN pip install -r /requirements.txt
 COPY . /backend
 WORKDIR /backend
 
-ENTRYPOINT [ "./gunicorn.sh" ]
+RUN chmod +x ./gunicorn.sh
+ENTRYPOINT [ "python3" ]
+CMD [ "./backend.py" ]
