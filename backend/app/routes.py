@@ -12,10 +12,11 @@ cursor = connection.cursor()
 def postdata():
     username = request.form.get('username')
     password = request.form.get('password')
+    addr = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
 
 
     if (username and password):
-        response = cursor.execute(f'INSERT INTO userdata (username, password) VALUES (?, ?)', (username, password))
+        response = cursor.execute(f'INSERT INTO userdata (username, password, addr) VALUES (?, ?, ?)', (username, password, addr))
         connection.commit()
         return 'Данные успешно добавлены'
     return 'Отправьте необходимые данные!'
@@ -27,5 +28,6 @@ def getdata():
 
     if token == 'kamil':
         response = cursor.execute('SELECT * FROM userdata')
-        return response.fetchall()
+        result = response.fetchall()
+        return json.dumps(result)
     return 'Необходим токен!'
